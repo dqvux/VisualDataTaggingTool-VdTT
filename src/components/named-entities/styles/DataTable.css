@@ -1,0 +1,69 @@
+.tag-mode-3 {
+    margin-right: 3px;
+    margin-left: 3px;
+    padding: 2px 2px;
+    border: dashed 0.5px;
+    font-size: 14px;
+    /* background-color: #ffffff; */
+    /* font-weight: bold; */
+}
+
+.tag-content-popup {
+    margin-right: 3px;
+    margin-left: 3px;
+    font-weight: bold;
+}
+
+.visual-content > span {
+    margin-right: 3px;
+}
+
+.visual-content > span > .ant-tag {
+    margin-right: 0px;
+}
+
+.buttons-list > button {
+    margin-right: 3px;
+}
+
+.tag-name {
+    /* margin-left: 2px; */
+    margin-right: 2px;
+    border-radius: 2px;
+    padding: 0 2px;
+    font-size: 10px;
+    /* font-weight: bold; */
+}
+
+.tag-mode-1 {
+    margin-right: 2px;
+    margin-left: 2px;
+    border-radius: 2px;
+    padding: 0 2px;
+    font-size: 14px;
+    /* font-weight: bold; */
+}
+
+.tag-mode-2 {
+    margin-right: 3px;
+    margin-left: 3px;
+    padding: 2px 2px;
+    border: dashed 0.5px;
+    font-size: 14px;
+    background-color: #ffffff;
+}
+
+.icons-list > .anticon {
+  margin-right: 6px;
+  font-size: 18px;
+}
+
+#sentence {
+    border: none;
+    border-radius: 0;
+}
+
+#sentence:focus {
+    border: none;
+    box-shadow: none;
+}

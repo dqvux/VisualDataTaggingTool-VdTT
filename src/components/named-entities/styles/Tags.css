@@ -1,0 +1,32 @@
+.cursor-pointer {
+    cursor: pointer;
+}
+
+.tag {
+    font-size: 14px;
+    /* font-weight: bold; */
+    margin-bottom: 5px;
+}
+
+.ner-select-tag-modal .ant-modal-confirm-btns {
+    display: none;
+}
+
+.ner-select-tag-modal .ant-modal-confirm-title {
+    text-align: center;
+}
+
+.ner-select-tag-modal .ant-menu-item-selected::after {
+    border-right: none;
+}
+
+.ner-select-tag-modal .ant-menu-item {
+    font-size: 16px;
+    font-weight: bold;
+    /* padding-left: 24px; */
+    border-radius: 4px;
+}
+
+.list-tags {
+    margin-right: 100px;
+}

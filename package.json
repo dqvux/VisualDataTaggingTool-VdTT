@@ -1,0 +1,86 @@
+{
+  "name": "VdTT",
+  "version": "2.0.0",
+  "private": true,
+  "main": "public/electron.js",
+  "homepage": "./",
+  "dependencies": {
+    "antd": "^3.20.6",
+    "babel-plugin-import": "^1.12.0",
+    "customize-cra": "^0.2.13",
+    "electron-is-dev": "^1.1.0",
+    "file-saver": "^2.0.2",
+    "highcharts": "^7.1.2",
+    "jsstore": "^3.1.1",
+    "less": "^3.9.0",
+    "less-loader": "^5.0.0",
+    "moment": "^2.24.0",
+    "react": "^16.8.6",
+    "react-app-rewired": "^2.1.3",
+    "react-dom": "^16.8.6",
+    "react-highlight-words": "^0.16.0",
+    "react-router-dom": "^5.0.1",
+    "react-scripts": "3.0.1",
+    "runes": "^0.4.3",
+    "typescript": "^3.6.3",
+    "xlsx": "^0.14.3"
+  },
+  "scripts": {
+    "start": "react-app-rewired start",
+    "build": "react-app-rewired build",
+    "test": "react-app-rewired test",
+    "eject": "react-app-rewired eject",
+    "electron-dev": "concurrently \"PORT=3000 BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
+    "postinstall": "electron-builder install-app-deps",
+    "preelectron-pack": "yarn build",
+    "electron-pack": "build -mwl"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "devDependencies": {
+    "concurrently": "^4.1.0",
+    "electron": "^5.0.4",
+    "electron-builder": "^20.43.0",
+    "wait-on": "^3.2.0"
+  },
+  "author": {
+    "name": "Duong Quang Vu",
+    "email": "dqvu.it@domain.com",
+    "url": "https://your-website.com"
+  },
+  "build": {
+    "appId": "com.dqvu.vdtt",
+    "productName": "Visual Data Tagging Tool - VdTT",
+    "copyright": "Copyright © 2019 ${author}",
+    "mac": {
+      "category": "public.app-category.utilities",
+      "target": "dmg",
+      "icon": "build/icon.icns"
+    },
+    "win": {
+      "target": "nsis",
+      "icon": "build/icon.ico"
+    },
+    "files": [
+      "build/**/*",
+      "node_modules/**/*"
+    ],
+    "directories": {
+      "buildResources": "assets"
+    },
+    "buildVersion": "2.0.0"
+  }
+}
