@@ -1,5 +1,7 @@
 An simple labeling tool for ML.
 
+public/vdtt-logo.png.ico
+
 ## Available Scripts
 In the project directory, you can run:
 
