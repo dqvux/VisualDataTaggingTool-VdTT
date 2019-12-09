@@ -1,0 +1,16 @@
+.buttons-list > button {
+    margin-right: 3px;
+}
+
+.tag-name {
+    margin-left: 4px;
+    border-radius: 2px;
+    padding: 0 2px;
+    font-size: 10px;
+    font-weight: bold;
+}
+
+.icons-list > .anticon {
+  margin-right: 6px;
+  font-size: 18px;
+}

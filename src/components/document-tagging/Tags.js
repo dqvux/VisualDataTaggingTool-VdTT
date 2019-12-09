@@ -8,11 +8,13 @@ import {
   notification,
   Affix,
   List,
-  Menu
+  Menu,
+  Divider
 } from "antd";
 import { colors } from "../common/constants";
 import "./styles/Tags.css";
 import { RepositoryService } from "../database/repositoryService";
+import shortid from "shortid";
 
 export default class Tags extends React.Component {
   state = {
@@ -20,13 +22,29 @@ export default class Tags extends React.Component {
     inputValue: ""
   };
 
-  handleClose = (e, removedTag) => {
-    e.preventDefault();
-
+  _removeTag = removedTag => {
     Modal.confirm({
-      title: "Are you sure delete this label?",
+      title: "Are you sure delete this tag?",
       onOk: () => {
-        const tags = this.props.tags.filter(tag => tag !== removedTag);
+        const tags = this.props.tags.filter(tag => tag.key !== removedTag.key);
+        this.props._updateTagsList(tags);
+      }
+    });
+  };
+
+  _editTag = editedTag => {
+    Modal.confirm({
+      icon: "edit",
+      title: "Edit Tag?",
+      content: <Input id="edit-tag-input" defaultValue={editedTag.value} />,
+      onOk: () => {
+        const tags = this.props.tags;
+        const indexOfEditedTag = tags
+          .map(tag => tag.key)
+          .indexOf(editedTag.key);
+        tags[indexOfEditedTag].value = document.getElementById(
+          "edit-tag-input"
+        ).value;
         this.props._updateTagsList(tags);
       }
     });
@@ -37,14 +55,17 @@ export default class Tags extends React.Component {
   };
 
   handleInputChange = e => {
-    this.setState({ inputValue: e.target.value.split(",") });
+    this.setState({ inputValue: e.target.value });
   };
 
-  handleInputConfirm = () => {
+  _newTag = () => {
     const { inputValue } = this.state;
     let { tags } = this.props;
-    if (inputValue && tags.indexOf(inputValue) === -1) {
-      tags = tags.concat(inputValue);
+    if (inputValue && tags.map(tag => tag.value).indexOf(inputValue) === -1) {
+      tags.push({
+        key: shortid.generate(),
+        value: inputValue
+      });
     }
 
     this.setState(
@@ -59,10 +80,11 @@ export default class Tags extends React.Component {
   saveInputRef = input => (this.input = input);
 
   render() {
-    const { tags, _addTag } = this.props;
+    const { tags } = this.props;
     const { inputVisible, inputValue } = this.state;
     return (
       <React.Fragment>
+        {/* <Divider>Tags</Divider> */}
         {inputVisible && (
           <Input
             ref={this.saveInputRef}
@@ -72,10 +94,11 @@ export default class Tags extends React.Component {
             style={{ width: 100 }}
             value={inputValue}
             onChange={this.handleInputChange}
-            onBlur={this.handleInputConfirm}
-            onPressEnter={this.handleInputConfirm}
+            onBlur={this._newTag}
+            onPressEnter={this._newTag}
           />
         )}
+        <br />
         {!inputVisible && (
           <div>
             <Tag
@@ -86,7 +109,7 @@ export default class Tags extends React.Component {
                 marginBottom: 5
               }}
             >
-              <Icon type="plus" /> New Label
+              <Icon type="plus" /> New Tag
             </Tag>
             <Tag
               onClick={this._saveTags}
@@ -96,29 +119,31 @@ export default class Tags extends React.Component {
                 marginBottom: 5
               }}
             >
-              <Icon type="save" /> Save
+              <Icon type="save" /> Save Tags
             </Tag>
           </div>
         )}
         {tags.map(tag => {
-          const isLongTag = tag.length > 50;
+          const isLongTag = tag.value.length > 50;
           const tagElem = (
             <Tag
               className="tag cursor-pointer"
-              color={colors[tags.indexOf(tag)]}
-              closable={true}
-              onClose={e => this.handleClose(e, tag)}
-              onClick={() => this.props._addTag(tag)}
+              color={colors[tags.map(tag => tag.key).indexOf(tag.key)]}
+              // closable={true}
+              // onClose={e => this._removeTag(e, tag)}
             >
-              {isLongTag ? `${tag.slice(0, 50)}...` : tag}
+              {isLongTag ? `${tag.value.slice(0, 50)}...` : tag.value}
+              <Divider type="vertical" />
+              <Icon type="edit" onClick={() => this._editTag(tag)} />
+              <Icon type="close" onClick={() => this._removeTag(tag)} />
             </Tag>
           );
           return isLongTag ? (
-            <span key={tag}>
-              <Tooltip title={tag}>{tagElem}</Tooltip>
+            <span key={tag.key}>
+              <Tooltip title={tag.value}>{tagElem}</Tooltip>
             </span>
           ) : (
-            <span key={tag}>{tagElem}</span>
+            <span key={tag.key}>{tagElem}</span>
           );
         })}
       </React.Fragment>
@@ -144,18 +169,21 @@ export default class Tags extends React.Component {
       );
       if (updateds > 0) {
         notification.success({
-          message: "Labels have been saved successfully"
+          message: "Tags have been saved successfully"
         });
       } else {
-        notification.error({ message: "Unable to save labels" });
+        notification.error({ message: "Unable to save tags" });
       }
     } catch (ex) {
-      notification.error({ message: ex.type, description: ex.message });
+      notification.error({
+        message: ex.type,
+        description: ex.message
+      });
     }
   };
 
-  // componentDidUpdate = () => {
-  //     const { tags, _addTag } = this.props
-  //     // document.removeEventListener('keypress', (e) => { })
-  // }
+  componentDidUpdate = () => {
+    const { tags, _addTag } = this.props;
+    // document.removeEventListener('keypress', (e) => { })
+  };
 }

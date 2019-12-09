@@ -136,38 +136,67 @@ export default class DataTable extends React.Component {
             }
         })
         return (
-            <React.Fragment>
-                <Button.Group>
-                    <Button icon='plus' onClick={this._addRow} type="primary" style={{ marginBottom: 16 }}>
-                        Add a row
-                    </Button>
-                    <Button icon='folder-open' onClick={this._chooseDataSource}>Import Data</Button>
-                    <Button icon='save' onClick={this._saveData}>Save Data</Button>
-                    <Button icon='delete' onClick={this._clearData}>Clear Data</Button>
-                    <Dropdown overlay={
-                        <Menu onClick={this._exportData}>
-                            <Menu.Item key="excel"><Icon type="file-excel" />EXCEL</Menu.Item>
-                            <Menu.Item key="json"><Icon type="file" />JSON</Menu.Item>
-                            <Menu.Item key="csv"><Icon type="file-text" />CSV</Menu.Item>
-                        </Menu>
-                    }>
-                        <Button icon='download'>Export <Icon type="down" /></Button>
-                    </Dropdown>
-                </Button.Group>
-                <Select defaultValue={renderTagMode} onChange={this._changeRenderTagMode} style={{ marginLeft: 10 }}>
-                    <Select.Option value="1">Label Style 1</Select.Option>
-                    <Select.Option value="2">Label Style 2</Select.Option>
-                    <Select.Option value="3">Label Style 3</Select.Option>
-                </Select>
-                <Table
-                    components={components}
-                    rowClassName={() => 'editable-row'}
-                    bordered
-                    dataSource={dataSource}
-                    columns={columns}
-                />
-            </React.Fragment>
-        )
+          <React.Fragment>
+            <Button.Group>
+              <Button
+                icon="plus"
+                onClick={this._addRow}
+                type="primary"
+                style={{ marginBottom: 16 }}
+              >
+                Add a row
+              </Button>
+              <Button icon="folder-open" onClick={this._chooseDataSource}>
+                Import Data
+              </Button>
+              <Button icon="save" onClick={this._saveData}>
+                Save Data
+              </Button>
+              <Button icon="delete" onClick={this._clearData}>
+                Clear Data
+              </Button>
+              <Dropdown
+                overlay={
+                  <Menu onClick={this._exportData}>
+                    <Menu.Item key="excel">
+                      <Icon type="file-excel" />
+                      EXCEL
+                    </Menu.Item>
+                    <Menu.Item key="json">
+                      <Icon type="file" />
+                      JSON
+                    </Menu.Item>
+                    <Menu.Item key="csv">
+                      <Icon type="file-text" />
+                      CSV
+                    </Menu.Item>
+                  </Menu>
+                }
+              >
+                <Button icon="download">
+                  Export <Icon type="down" />
+                </Button>
+              </Dropdown>
+              <Select
+                defaultValue={renderTagMode}
+                onChange={this._changeRenderTagMode}
+                style={{ marginLeft: 10 }}
+              >
+                <Select.Option value="1">Label Style 1</Select.Option>
+                <Select.Option value="2">Label Style 2</Select.Option>
+                <Select.Option value="3">Label Style 3</Select.Option>
+              </Select>
+            </Button.Group>
+
+            <Table
+              components={components}
+              rowClassName={() => "editable-row"}
+              bordered
+              dataSource={dataSource}
+              columns={columns}
+            />
+          </React.Fragment>
+        );
     }
 
     _changeRenderTagMode = (value) => {

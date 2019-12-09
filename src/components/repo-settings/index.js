@@ -11,16 +11,9 @@ export default class RepoSettings extends React.Component {
     render () {
         const { repository } = this.state
         return (
-            <React.Fragment>
-                <Row gutter={30}>
-                    <Col span={12}>
-                        <UpdateRepoSettings repository={repository} />
-                    </Col>
-                    <Col span={12}>
-                        {/* <UpdateTags tags={repository.tags} _updateTagsList={this.props._updateTagsList} /> */}
-                    </Col>
-                </Row>
-            </React.Fragment>
-        )
+          <React.Fragment>
+            <UpdateRepoSettings repository={repository} />
+          </React.Fragment>
+        );
     }
 }

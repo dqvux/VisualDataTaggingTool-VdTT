@@ -1,12 +1,13 @@
 {
   "name": "VdTT",
-  "version": "2.0.0",
+  "version": "2.1.0",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
   "dependencies": {
-    "antd": "^3.20.6",
+    "antd": "^3.26.0",
     "babel-plugin-import": "^1.12.0",
+    "chokidar": "^3.3.0",
     "customize-cra": "^0.2.13",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
@@ -22,7 +23,8 @@
     "react-router-dom": "^5.0.1",
     "react-scripts": "3.0.1",
     "runes": "^0.4.3",
-    "typescript": "^3.6.3",
+    "shortid": "^2.2.15",
+    "typescript": "^3.7.3",
     "xlsx": "^0.14.3"
   },
   "scripts": {
@@ -33,7 +35,7 @@
     "electron-dev": "concurrently \"PORT=3000 BROWSER=none yarn start\" \"wait-on http://localhost:3000 && electron .\"",
     "postinstall": "electron-builder install-app-deps",
     "preelectron-pack": "yarn build",
-    "electron-pack": "build -mwl"
+    "electron-pack": "electron-builder -ml"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -53,7 +55,7 @@
   "devDependencies": {
     "concurrently": "^4.1.0",
     "electron": "^5.0.4",
-    "electron-builder": "^20.43.0",
+    "electron-builder": "^21.2.0",
     "wait-on": "^3.2.0"
   },
   "author": {
@@ -81,6 +83,6 @@
     "directories": {
       "buildResources": "assets"
     },
-    "buildVersion": "2.0.0"
+    "buildVersion": "2.1.0"
   }
 }

@@ -3,7 +3,7 @@ An simple labeling tool for ML.
 ## Available Scripts
 In the project directory, you can run:
 
-### `yarn install`
+### `yarn`
 Install dependencies
 
 ### `yarn start`
