@@ -1,5 +1,6 @@
 import React, { Component } from "react";
-import { Tooltip, Icon, Menu, PageHeader } from "antd";
+import { Icon, Menu, Avatar } from "antd";
+import logo from "../assets/images/logo.png";
 import "./style.css";
 
 class HeaderMenu extends Component {
@@ -16,7 +17,7 @@ class HeaderMenu extends Component {
     return (
       <Menu theme="dark" mode="horizontal" style={{ lineHeight: "62px" }}>
         <Menu.Item className="sidebar-menu-item">
-          <Icon type="tag" theme="twoTone" className="sidebar-icon" />
+          <Avatar shape="square" src={logo} />{" "}
           <span
             className="sidebar-repository-title"
             style={{ color: "#ffffff" }}

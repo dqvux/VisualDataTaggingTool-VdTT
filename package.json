@@ -1,6 +1,6 @@
 {
   "name": "VdTT",
-  "version": "2.1.0",
+  "version": "2.1.2",
   "private": true,
   "main": "public/electron.js",
   "homepage": "./",
@@ -11,7 +11,7 @@
     "customize-cra": "^0.2.13",
     "electron-is-dev": "^1.1.0",
     "file-saver": "^2.0.2",
-    "highcharts": "^7.1.2",
+    "highcharts": "^8.0.0",
     "jsstore": "^3.1.1",
     "less": "^3.9.0",
     "less-loader": "^5.0.0",
@@ -83,6 +83,6 @@
     "directories": {
       "buildResources": "assets"
     },
-    "buildVersion": "2.1.0"
+    "buildVersion": "2.1.2"
   }
 }

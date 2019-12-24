@@ -2,8 +2,10 @@ import React from "react";
 import { RepositoryService } from "../database/repositoryService";
 import { Row, Table, Button } from "antd";
 import { remote } from "electron";
+import { exportData } from "../common/export";
 const { dialog } = remote;
 const electronFs = remote.require("fs");
+
 
 export default class DocumentTaggingStats extends React.Component {
   state = {
@@ -27,7 +29,9 @@ export default class DocumentTaggingStats extends React.Component {
       {
         title: "Count",
         key: "count",
-        dataIndex: "count"
+        dataIndex: "count",
+        defaultSortOrder: "descend",
+        sorter: (a, b) => a.count - b.count
       }
     ];
     return (
@@ -43,12 +47,29 @@ export default class DocumentTaggingStats extends React.Component {
             Choose directory
           </Button>
           <Button
+            style={{ marginRight: 10 }}
             type="primary"
             icon="pie-chart"
             loading={isGetStats}
             onClick={this._report}
           >
             Report
+          </Button>
+          <Button
+            type="primary"
+            icon="download"
+            onClick={() =>
+              exportData(
+                Object.keys(totalTags).map(key => ({
+                  key: key,
+                  value: tags.filter(tag => tag.key === key)[0].value,
+                  count: totalTags[key]
+                })),
+                "json"
+              )
+            }
+          >
+            Export
           </Button>
         </Row>
         <Row>

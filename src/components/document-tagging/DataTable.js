@@ -8,7 +8,9 @@ import {
   Layout,
   Divider,
   Breadcrumb,
-  Skeleton
+  Skeleton,
+  Icon,
+  Affix
 } from "antd";
 import "./styles/DataTable.css";
 import constants from "../common/constants";
@@ -16,6 +18,8 @@ import { exportData } from "../common/export";
 import { RepositoryService } from "../database/repositoryService";
 import { remote } from "electron";
 import Tags from "./Tags";
+import shortid from "shortid";
+
 const { dialog } = remote;
 const electronFs = remote.require("fs");
 const chokidar = remote.require("chokidar");
@@ -23,7 +27,7 @@ const electronPath = remote.require("path");
 let watcher = null;
 const colors = constants.colors;
 const { TreeNode, DirectoryTree } = Tree;
-const { Sider, Content } = Layout;
+const { Sider, Content, Footer } = Layout;
 
 export default class DataTable extends React.Component {
   state = {
@@ -31,7 +35,10 @@ export default class DataTable extends React.Component {
     currentDoc: null,
     tags: [],
     selectedTags: [],
-    openedDirectory: "",
+    openedDirectory:
+      "workingDirectory" in localStorage
+        ? localStorage.getItem("workingDirectory")
+        : "",
     isLoading: false
   };
 
@@ -61,7 +68,10 @@ export default class DataTable extends React.Component {
               Export Tags
             </Button>
           </Button.Group>
-          <Breadcrumb separator="">
+          <Breadcrumb
+            style={{ marginTop: 10 }}
+            separator={<Icon type="caret-right" />}
+          >
             {openedDirectory.split("/").map((item, index) => (
               <>
                 <Breadcrumb.Item
@@ -77,7 +87,6 @@ export default class DataTable extends React.Component {
                 >
                   <b>{item}</b>
                 </Breadcrumb.Item>
-                <Breadcrumb.Separator />
               </>
             ))}
           </Breadcrumb>
@@ -90,7 +99,10 @@ export default class DataTable extends React.Component {
           }}
         >
           <Sider
-            style={{ overflow: "auto", border: "1px solid #e8e8e8" }}
+            style={{
+              overflow: "auto",
+              border: "1px solid #e8e8e8"
+            }}
             width="25%"
             theme="light"
           >
@@ -103,9 +115,11 @@ export default class DataTable extends React.Component {
                 onSelect={this._selectFile}
                 onExpand={this._expandDirectory}
               >
-                {directoryTree
-                  .sort((a, b) => (a.name > b.name ? 1 : -1))
-                  .map(tree => this._renderDirectoryTree(tree))}
+                {openedDirectory === ""
+                  ? "Choose a directory"
+                  : directoryTree
+                      .sort((a, b) => (a.name > b.name ? 1 : -1))
+                      .map(tree => this._renderDirectoryTree(tree))}
               </DirectoryTree>
             )}
           </Sider>
@@ -116,7 +130,6 @@ export default class DataTable extends React.Component {
             <Content className="border-right">
               {currentDoc && (
                 <>
-                  <b>{currentDoc.name}</b>
                   <p
                     className="content"
                     style={{
@@ -130,16 +143,42 @@ export default class DataTable extends React.Component {
                   </p>
                 </>
               )}
+              <Affix offsetBottom={10}>
+                <div
+                  style={{ backgroundColor: "#f2f4f5", padding: "10px 10px" }}
+                >
+                  <b>
+                    {!currentDoc ? "No document selected" : currentDoc.name}
+                  </b>
+                </div>
+              </Affix>
             </Content>
-            <Sider width="30%" theme="light" style={{ padding: 20 }}>
+            <Sider
+              width="30%"
+              theme="light"
+              style={{
+                overflow: "auto",
+                padding: "10px 10px"
+              }}
+            >
               <Select
                 mode="multiple"
                 allowClear={true}
                 style={{ width: "100%" }}
-                // optionLabelProp="children"
+                placeholder="Tag ..."
+                mode="multiple"
                 value={selectedTags}
+                // labelInValue={true}
                 onChange={this._selectTags}
-                filterOption={this._searchTag}
+                onSearch={this._searchTag}
+                onInputKeyDown={this._checkEnter}
+                filterOption={this._filterOption}
+                notFoundContent={
+                  <span>
+                    Not found. Press `Enter` (<Icon type="enter" />) to create
+                    this Tag.
+                  </span>
+                }
               >
                 {tags.map(tag => {
                   return (
@@ -149,12 +188,10 @@ export default class DataTable extends React.Component {
                   );
                 })}
               </Select>
-              <Divider>Tags List</Divider>
-              <Tags
-                tags={tags}
-                _updateTagsList={this._updateTagsList}
-                _addTag={this._addTag}
-              />
+              <Divider>
+                <span>{tags.length} Tag(s)</span>
+              </Divider>
+              <Tags tags={tags} _updateTagsList={this._updateTagsList} />
             </Sider>
           </Layout>
         </Layout>
@@ -172,7 +209,7 @@ export default class DataTable extends React.Component {
           notification.error({ message: err });
         }
         const tags = JSON.parse(data);
-        this.setState({ tags });
+        this._updateTagsList(tags);
       });
     }
   };
@@ -183,6 +220,7 @@ export default class DataTable extends React.Component {
       properties: ["openDirectory"]
     });
     if (directory && directory[0]) {
+      localStorage.setItem("workingDirectory", directory[0]);
       this._openDirectory(directory[0]);
     }
   };
@@ -216,6 +254,8 @@ export default class DataTable extends React.Component {
   _openDirectory = async key => {
     this.setState({ isLoading: true });
     if (watcher) await watcher.close();
+
+    localStorage.setItem("workingDirectory", key);
 
     const fileArray = this._readDir(key);
     this.setState({
@@ -279,7 +319,12 @@ export default class DataTable extends React.Component {
       return (
         <TreeNode title={tree.name} key={tree.path} selectable={false}>
           {tree.items.map(file => (
-            <TreeNode title={file.name} isLeaf key={file.path}>
+            <TreeNode
+              title={file.name}
+              isLeaf
+              key={file.path}
+              icon={<Icon type="file-text" />}
+            >
               {this._renderDirectoryTree(file)}
             </TreeNode>
           ))}
@@ -291,6 +336,7 @@ export default class DataTable extends React.Component {
           key={tree.path}
           title={tree.name}
           isLeaf
+          icon={<Icon type="file-text" />}
           onClick={() => this.setState({ currentDoc: tree })}
         />
       );
@@ -305,14 +351,57 @@ export default class DataTable extends React.Component {
     await this._openDirectory(keys[0]);
   };
 
-  _searchTag = (inputValue, option) => {
-    return option.props.children
+  _searchTag = value => {
+    this.newValue = value.trim();
+  };
+
+  _checkEnter = e => {
+    const { tags, selectedTags } = this.state;
+    if (e.keyCode === 13 && this.newValue !== "") {
+      // Enter
+      e.preventDefault();
+      if (
+        tags.map(tag => tag.key).indexOf(this.newValue) === -1 &&
+        tags.map(tag => tag.value).indexOf(this.newValue) === -1
+      ) {
+        const newTag = {
+          key: shortid.generate(),
+          value: this.newValue
+        };
+        tags.push(newTag);
+        this._updateTagsList(tags);
+        this.setState({ selectedTags: [...selectedTags, newTag.key] });
+      }
+    }
+  };
+
+  _filterOption = (inputValue, option) => {
+    const bool = option.props.children
       .toLowerCase()
       .includes(inputValue.toLowerCase());
+    return bool;
   };
 
   _selectTags = value => {
     this.setState({ selectedTags: value });
+  };
+
+  _checkTag = tagValue => {
+    const { tags, selectedTags } = this.state;
+    if (
+      tags.map(tag => tag.key).indexOf(tagValue) === -1 &&
+      tags.map(tag => tag.value).indexOf(tagValue) === -1
+    ) {
+      const newTag = {
+        key: shortid.generate(),
+        value: tagValue
+      };
+      tags.push(newTag);
+      this._updateTagsList(tags);
+      this.setState({ selectedTags: [...selectedTags, newTag.key] });
+    } else {
+      return;
+    }
   };
 
   _saveData = () => {
@@ -341,8 +430,42 @@ export default class DataTable extends React.Component {
     });
   };
 
+  _saveTags = async () => {
+    const { tags } = this.state;
+    const service = new RepositoryService();
+
+    if (!("currentRepository" in localStorage)) {
+      return;
+    }
+    const currentRepository = JSON.parse(
+      localStorage.getItem("currentRepository")
+    );
+    try {
+      const updateds = await service.updateRepositoryById(
+        currentRepository.id,
+        {
+          tags: tags
+        }
+      );
+      if (updateds > 0) {
+        notification.success({
+          message: "Tags have been saved successfully"
+        });
+      } else {
+        notification.error({ message: "Unable to save tags" });
+      }
+    } catch (ex) {
+      notification.error({
+        message: ex.type,
+        description: ex.message
+      });
+    }
+  };
+
   _updateTagsList = newTagsList => {
-    this.setState({ tags: newTagsList });
+    this.setState({ tags: newTagsList }, () => {
+      this._saveTags();
+    });
   };
 
   _getRepositoryData = async () => {
@@ -366,6 +489,9 @@ export default class DataTable extends React.Component {
 
   componentDidMount = () => {
     this._getRepositoryData();
+    if ("workingDirectory" in localStorage) {
+      this._openDirectory(localStorage.getItem("workingDirectory"));
+    }
     document.addEventListener(
       "keydown",
       e => {

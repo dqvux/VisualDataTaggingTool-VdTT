@@ -87,10 +87,11 @@ export default class ProgressPieChart extends React.Component {
       const repositories = await service.getRepositoryById(
         currentRepository.id
       );
-      this.setState({
-        dataSource: repositories[0].data,
-        tags: repositories[0].tags
-      });
+      // this.setState({
+      //   dataSource: repositories[0].data,
+      //   tags: repositories[0].tags
+      // });
+      this._report(repositories[0].data, repositories[0].tags);
     } catch (ex) {
       console.error(ex);
     }
@@ -101,12 +102,10 @@ export default class ProgressPieChart extends React.Component {
   };
 
   componentDidMount = () => {
-    this._getRepositoryData();
+    // this._getRepositoryData();
   };
 
-  componentDidUpdate = () => {
-    const { dataSource, tags } = this.state;
-    console.log(dataSource, tags);
+  _report = (dataSource, tags) => {
     const { interfaceType } = this.props;
 
     if (interfaceType === "Document Tagging") return;
@@ -157,6 +156,7 @@ export default class ProgressPieChart extends React.Component {
           y: allLabels.filter(label => label === tag).length
         });
       });
+      console.log(labelsData);
       _genLabelsChart(labelsData);
     }
 

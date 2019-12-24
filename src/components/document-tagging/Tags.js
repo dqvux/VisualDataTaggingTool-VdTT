@@ -5,15 +5,10 @@ import {
   Tooltip,
   Icon,
   Modal,
-  notification,
-  Affix,
-  List,
-  Menu,
   Divider
 } from "antd";
 import { colors } from "../common/constants";
 import "./styles/Tags.css";
-import { RepositoryService } from "../database/repositoryService";
 import shortid from "shortid";
 
 export default class Tags extends React.Component {
@@ -124,15 +119,15 @@ export default class Tags extends React.Component {
           </div>
         )}
         {tags.map(tag => {
-          const isLongTag = tag.value.length > 50;
+          const isLongTag = tag.value.length > 25;
           const tagElem = (
             <Tag
               className="tag cursor-pointer"
-              color={colors[tags.map(tag => tag.key).indexOf(tag.key)]}
+              // color={colors[tags.map(tag => tag.key).indexOf(tag.key)]}
               // closable={true}
               // onClose={e => this._removeTag(e, tag)}
             >
-              {isLongTag ? `${tag.value.slice(0, 50)}...` : tag.value}
+              {isLongTag ? `${tag.value.slice(0, 25)}...` : tag.value}
               <Divider type="vertical" />
               <Icon type="edit" onClick={() => this._editTag(tag)} />
               <Icon type="close" onClick={() => this._removeTag(tag)} />
@@ -149,41 +144,4 @@ export default class Tags extends React.Component {
       </React.Fragment>
     );
   }
-
-  _saveTags = async () => {
-    const { tags } = this.props;
-    const service = new RepositoryService();
-
-    if (!("currentRepository" in localStorage)) {
-      return;
-    }
-    const currentRepository = JSON.parse(
-      localStorage.getItem("currentRepository")
-    );
-    try {
-      const updateds = await service.updateRepositoryById(
-        currentRepository.id,
-        {
-          tags: tags
-        }
-      );
-      if (updateds > 0) {
-        notification.success({
-          message: "Tags have been saved successfully"
-        });
-      } else {
-        notification.error({ message: "Unable to save tags" });
-      }
-    } catch (ex) {
-      notification.error({
-        message: ex.type,
-        description: ex.message
-      });
-    }
-  };
-
-  componentDidUpdate = () => {
-    const { tags, _addTag } = this.props;
-    // document.removeEventListener('keypress', (e) => { })
-  };
 }

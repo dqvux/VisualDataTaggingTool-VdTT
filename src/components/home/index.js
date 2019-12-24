@@ -36,7 +36,7 @@ export default class Homepage extends React.Component {
                   Visual Data Tagging Tool
                 </h1>
                 <h3 style={{ marginTop: 20, color: "#5f4e56" }}>
-                  Version 2.1.0 - Developed by DQV @ 2019
+                  Version 2.1.2 - Developed by DQV @ 2019
                 </h3>
                 <div>
                   <Button

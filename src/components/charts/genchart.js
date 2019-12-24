@@ -44,7 +44,7 @@ export function _genLabelsChart(data) {
                 enabled: true,
                 //rotation: -90,
                 color: '#FFFFFF',
-                align: 'right',
+                align: 'low',
                 format: '{point.y}', // one decimal
                 //y: 10, // 10 pixels down from the top
                 style: {
