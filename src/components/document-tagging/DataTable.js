@@ -170,15 +170,15 @@ export default class DataTable extends React.Component {
                 value={selectedTags}
                 // labelInValue={true}
                 onChange={this._selectTags}
-                onSearch={this._searchTag}
-                onInputKeyDown={this._checkEnter}
+                // onSearch={this._searchTag}
+                // onInputKeyDown={this._checkEnter}
                 filterOption={this._filterOption}
-                notFoundContent={
-                  <span>
-                    Not found. Press `Enter` (<Icon type="enter" />) to create
-                    this Tag.
-                  </span>
-                }
+                // notFoundContent={
+                //   <span>
+                //     Not found. Press `Enter` (<Icon type="enter" />) to create
+                //     this Tag.
+                //   </span>
+                // }
               >
                 {tags.map(tag => {
                   return (

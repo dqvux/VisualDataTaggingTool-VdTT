@@ -1,12 +1,5 @@
 import React from "react";
-import {
-  Tag,
-  Input,
-  Tooltip,
-  Icon,
-  Modal,
-  Divider
-} from "antd";
+import { Tag, Input, Tooltip, Icon, Modal, Divider } from "antd";
 import { colors } from "../common/constants";
 import "./styles/Tags.css";
 import shortid from "shortid";
@@ -32,6 +25,8 @@ export default class Tags extends React.Component {
       icon: "edit",
       title: "Edit Tag?",
       content: <Input id="edit-tag-input" defaultValue={editedTag.value} />,
+      cancelText: <b style={{ color: "red" }}>Delete</b>,
+      cancelType: "danger",
       onOk: () => {
         const tags = this.props.tags;
         const indexOfEditedTag = tags
@@ -40,6 +35,10 @@ export default class Tags extends React.Component {
         tags[indexOfEditedTag].value = document.getElementById(
           "edit-tag-input"
         ).value;
+        this.props._updateTagsList(tags);
+      },
+      onCancel: () => {
+        const tags = this.props.tags.filter(tag => tag.key !== editedTag.key);
         this.props._updateTagsList(tags);
       }
     });
@@ -123,22 +122,21 @@ export default class Tags extends React.Component {
           const tagElem = (
             <Tag
               className="tag cursor-pointer"
+              onClick={() => this._editTag(tag)}
               // color={colors[tags.map(tag => tag.key).indexOf(tag.key)]}
               // closable={true}
               // onClose={e => this._removeTag(e, tag)}
             >
               {isLongTag ? `${tag.value.slice(0, 25)}...` : tag.value}
-              <Divider type="vertical" />
+              {/* <Divider type="vertical" />
               <Icon type="edit" onClick={() => this._editTag(tag)} />
-              <Icon type="close" onClick={() => this._removeTag(tag)} />
+              <Icon type="close" onClick={() => this._removeTag(tag)} /> */}
             </Tag>
           );
           return isLongTag ? (
-            <span key={tag.key}>
-              <Tooltip title={tag.value}>{tagElem}</Tooltip>
-            </span>
+            <Tooltip title={tag.value}>{tagElem}</Tooltip>
           ) : (
-            <span key={tag.key}>{tagElem}</span>
+            tagElem
           );
         })}
       </React.Fragment>
