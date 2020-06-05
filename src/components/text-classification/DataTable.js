@@ -496,7 +496,7 @@ const EditableRow = ({ form, index, ...props }) => (
   </EditableContext.Provider>
 );
 
-const EditableFormRow = Form.create()(EditableRow);
+const EditableFormRow = EditableRow;
 
 class EditableCell extends React.Component {
   state = {

@@ -94,5 +94,6 @@ class initForm extends React.Component {
     }
 }
 
-const TaggingForm = Form.create({ name: 'horizontal_login', onValuesChange: (props, changedValues, allValues) => props.changeDependency(allValues) })(initForm)
+// const TaggingForm = Form.useForm({ name: 'horizontal_login', onValuesChange: (props, changedValues, allValues) => props.changeDependency(allValues) })(initForm)
+const TaggingForm = initForm
 export default TaggingForm

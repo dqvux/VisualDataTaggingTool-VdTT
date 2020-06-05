@@ -125,8 +125,6 @@ class initForm extends React.Component {
   };
 }
 
-const CreateRepositoryForm = Form.create({ name: "create-repo-form" })(
-  initForm
-);
+const CreateRepositoryForm = initForm;
 
 export default CreateRepositoryForm;

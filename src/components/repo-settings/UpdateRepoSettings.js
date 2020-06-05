@@ -164,6 +164,6 @@ class initForm extends React.Component {
   };
 }
 
-const UpdateRepoSettings = Form.create({ name: "update-repo-form" })(initForm);
+const UpdateRepoSettings = initForm;
 
 export default UpdateRepoSettings;
